@@ -7,12 +7,22 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package:mac": "electron-packager . Middo --platform=darwin --arch=x64 --out=release-builds --icon=./assets/icon-mac.icns",
+    "package:win": "electron-packager . Middo --platform=win32 --arch=x64 --out=release-builds --icon=./assets/icon-win.ico",
+    "package:linux": "electron-packager . Middo --platform=linux --arch=x64 --out=release-builds --icon=./assets/icon-linux.png",
+    "package:all": "npm-run-all package:mac package:win package:linux"
   },
+  "permissions": [
+    "desktopCapture",
+    "audioCapture",
+    "videoCapture"
+  ],
   "devDependencies": {
     "electron": "^28.2.1"
   },
   "dependencies": {
-    "dotenv": "^16.4.1"
+    "dotenv": "^16.4.1",
+    "electron-packager": "^17.1.2"
   }
 }
