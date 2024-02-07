@@ -1,10 +1,7 @@
-import "dotenv/config";
-import { app, BrowserWindow, globalShortcut, session } from "electron";
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { app, BrowserWindow, ipcMain, globalShortcut, dialog } = require("electron");
+const path = require("path");
+require("dotenv").config();
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 const isDev = process.env.NODE_ENV === "development";
@@ -12,26 +9,14 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    // fullscreen: true,
-    // frame: true,
-    experimentalFeatures: true, 
-    // icon: "../assets/icon-linux.png",
-    // icon: path.join(__dirname, "assets", "icon-linux.png"),
-    nodeIntegration: true,
-    contextIsolation: false,
-    sandbox: true, // Enable sandbox for additional security
-    enableRemoteModule: true,
-    webSecurity: true, // Enable web security
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["self"],
-        scriptSrc: ["self"],
-      },
-    },
-    allowRunningInsecureContent: true,
+    sandbox: false,
+    width: 800,
+    height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true,
+      contextIsolation: true,
+    },
   });
 
   mainWindow.loadURL(APP_URL);
@@ -40,6 +25,9 @@ function createWindow() {
   mainWindow.setMenu(null);
 
   // Open the DevTools when press control + I
+  if(isDev) {
+    mainWindow.webContents.toggleDevTools();
+  }
   globalShortcut.register("Control+I", () => {
     mainWindow.webContents.toggleDevTools();
   });
@@ -55,12 +43,10 @@ function createWindow() {
     mainWindow = null;
   });
 
-  // Check is jumping to /talk page => show alert
   mainWindow.webContents.on("did-navigate-in-page", (event, url) => {
-    console.log("did-navigate-in-page", url);
+    
   });
 
-  // add event when click share screen button (#share-screen)
   mainWindow.webContents.on("dom-ready", () => {
     
   });
