@@ -15,7 +15,8 @@ function createWindow() {
     // fullscreen: true,
     // frame: true,
     experimentalFeatures: true, 
-    icon: path.join(__dirname, "assets", "icon-linux.png"),
+    // icon: "../assets/icon-linux.png",
+    // icon: path.join(__dirname, "assets", "icon-linux.png"),
     nodeIntegration: true,
     contextIsolation: false,
     sandbox: true, // Enable sandbox for additional security
@@ -27,6 +28,10 @@ function createWindow() {
         scriptSrc: ["self"],
       },
     },
+    allowRunningInsecureContent: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   });
 
   mainWindow.loadURL(APP_URL);
@@ -34,52 +39,38 @@ function createWindow() {
   // Hide menu bar
   mainWindow.setMenu(null);
 
-  if (isDev) {
-    // Open the DevTools when press control + I
-    globalShortcut.register("Control+I", () => {
-      mainWindow.webContents.toggleDevTools();
-    });
+  // Open the DevTools when press control + I
+  globalShortcut.register("Control+I", () => {
+    mainWindow.webContents.toggleDevTools();
+  });
 
-    // Reload the app when press control + R
-    globalShortcut.register("Control+R", () => {
-      mainWindow.reload();
-    });
+  // Reload the app when press control + R
+  globalShortcut.register("Control+R", () => {
+    mainWindow.reload();
+  });
 
-    // Unregister the shortcut when the app is closed
-    mainWindow.on("closed", () => {
-      globalShortcut.unregisterAll();
-    });
-  }
-
-  // Handle media permissions directly on webContents
-//   mainWindow.webContents.on("select-media-started", (event, request) => {
-//     // Allow access to media devices
-//     event.preventDefault();
-//     request.allow();
-//   });
-  mainWindow.on("closed", function () {
+  // Unregister the shortcut when the app is closed
+  mainWindow.on("closed", () => {
+    globalShortcut.unregisterAll();
     mainWindow = null;
   });
+
+  // Check is jumping to /talk page => show alert
+  mainWindow.webContents.on("did-navigate-in-page", (event, url) => {
+    console.log("did-navigate-in-page", url);
+  });
+
+  // add event when click share screen button (#share-screen)
+  mainWindow.webContents.on("dom-ready", () => {
+    
+  });
+
 }
 
-app.whenReady().then(() => {
-  //   session.defaultSession.setPermissionRequestHandler(
-  //     (webContents, permission, callback) => {
-  //       if (permission === "media") {
-  //         callback(true);
-  //       } else {
-  //         callback(false);
-  //       }
-  //     }
-  //   );
-  createWindow();
-
-});
+app.whenReady().then(() => createWindow());
 
 app.on("window-all-closed", function () {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  if (process.platform !== "darwin") app.quit();
 });
 
 app.on("activate", function () {
