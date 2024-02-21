@@ -12,19 +12,11 @@ window.addEventListener("DOMContentLoaded", () => {
   document.body.appendChild(rendererScript);
 });
 
-contextBridge.exposeInMainWorld("getDisplayMedia", async () => {
+contextBridge.exposeInMainWorld("getDisplayMedia", async (sourceId) => {
   const sources = await desktopCapturer.getSources({
     types: ["window", "screen"],
   });
-
-  // you should create some kind of UI to prompt the user
-  // to select the correct source like Google Chrome does
-  // const selectedSource = sources[0]; // this is just for testing purposes
-  // console.log(sources);
-  // create UI to chooose 
-  // wait for the user to select a source and return it
-  let selectedSource = await selectSource(sources);
-
+  const selectedSource = sources.find(source => source.id === sourceId);
   return selectedSource;
 });
 

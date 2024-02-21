@@ -1,6 +1,6 @@
-navigator.mediaDevices.getDisplayMedia = async () => {
+navigator.mediaDevices.getDisplayMedia = async (sourceId) => {
   try {
-    const selectedSource = await globalThis.getDisplayMedia();
+    const selectedSource = await globalThis.getDisplayMedia(sourceId);
 
     // create MediaStream
     const stream = await navigator.mediaDevices.getUserMedia({
