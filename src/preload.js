@@ -12,7 +12,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.body.appendChild(rendererScript);
 });
 
-contextBridge.exposeInMainWorld("myCustomGetDisplayMedia", async () => {
+contextBridge.exposeInMainWorld("getDisplayMedia", async () => {
   const sources = await desktopCapturer.getSources({
     types: ["window", "screen"],
   });
@@ -26,4 +26,17 @@ contextBridge.exposeInMainWorld("myCustomGetDisplayMedia", async () => {
   let selectedSource = await selectSource(sources);
 
   return selectedSource;
+});
+
+
+contextBridge.exposeInMainWorld("getAllAvailableSources", async () => {
+  const sources = await desktopCapturer.getSources({
+    types: ["window", "screen"],
+  });
+  const result = []
+  sources.forEach(source => {
+    const thumbnail = source.thumbnail.toDataURL();
+    result.push({...source, thumbnail});
+  })
+  return result;
 });
