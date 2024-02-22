@@ -9,73 +9,24 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build:mac": "electron-builder --mac",
-    "build:win": "electron-builder --win",
-    "build:linux": "electron-builder --linux",
-    "build": "electron-builder",
-    "build:all": "electron-builder -mwl"
+    "build:win": "electron-builder -w",
+    "build:mac": "electron-builder -m",
+    "build:linux": "electron-builder -l",
+    "build:all": "electron-builder -wml",
+    "build": "electron-builder"
   },
   "build": {
-    "appId": "com.dudaji.middo",
+    "appId": "middo.app",
     "productName": "Middo",
     "directories": {
       "output": "release-builds"
-    },
-    "mac": {
-      "icon": "./assets/icon-mac.icns",
-      "target": [
-        "dmg"
-      ]
-    },
-    "win": {
-      "icon": "./assets/icon-win.ico",
-      "target": [
-        "nsis"
-      ]
-    },
-    "linux": {
-      "icon": "./assets/icon-linux.png",
-      "target": [
-        "deb"
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "installerIcon": "./assets/icon-win.ico",
-      "uninstallerIcon": "./assets/icon-win.ico",
-      "uninstallDisplayName": "Middo",
-      "license": "LICENSE.md",
-      "allowToChangeInstallationDirectory": false
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ],
-      "icon": "./assets/icon-mac.icns",
-      "iconSize": 100,
-      "background": "./assets/background-mac.tiff"
     }
   },
-  "permissions": [
-    "desktopCapture",
-    "audioCapture",
-    "videoCapture"
-  ],
   "devDependencies": {
-    "electron-builder": "^24.9.1"
+    "electron-builder": "^24.9.1",
+    "electron": "^29.0.1"
   },
   "dependencies": {
-    "dotenv": "^16.4.1",
-    "electron": "^29.0.1",
-    "electron-packager": "^17.1.2"
+    "dotenv": "^16.4.1"
   }
 }

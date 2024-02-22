@@ -7,6 +7,19 @@ const APP_URL = process.env.APP_URL || "http://localhost:3000";
 const isDev = process.env.NODE_ENV === "development";
 let mainWindow;
 
+let iconPath;
+switch(process.platform) {
+  case "darwin":
+    iconPath = path.join(__dirname, "assets", "icon.icns");
+    break;
+  case "win32":
+  case "win64":
+    iconPath = path.join(__dirname, "assets", "icon.ico");
+    break;
+  default:
+    iconPath = path.join(__dirname, "assets", "icon.png");
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     sandbox: false,
@@ -18,6 +31,7 @@ function createWindow() {
       contextIsolation: true,
       enableRemoteModule: true
     },
+    icon: iconPath
   });
   mainWindow.loadURL(APP_URL);
 
