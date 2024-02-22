@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder -w",
+    "build:win": "electron-builder build --win portable",
     "build:mac": "electron-builder -m",
     "build:linux": "electron-builder -l",
     "build:all": "electron-builder -wml",
@@ -20,6 +20,10 @@
     "productName": "Middo",
     "directories": {
       "output": "release-builds"
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "runAfterFinish": true
     }
   },
   "devDependencies": {
