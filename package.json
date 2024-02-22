@@ -71,11 +71,11 @@
     "videoCapture"
   ],
   "devDependencies": {
-    "electron": "^13.1.7",
     "electron-builder": "^24.9.1"
   },
   "dependencies": {
     "dotenv": "^16.4.1",
+    "electron": "^29.0.1",
     "electron-packager": "^17.1.2"
   }
 }
