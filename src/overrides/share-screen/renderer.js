@@ -1,8 +1,9 @@
 navigator.mediaDevices.getDisplayMedia = async (sourceId) => {
   try {
     const selectedSource = await globalThis.getDisplayMedia(sourceId);
-
-    // create MediaStream
+    if(!selectedSource) {
+      throw new Error("No source selected");
+    }
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: {
@@ -23,12 +24,12 @@ navigator.mediaDevices.getDisplayMedia = async (sourceId) => {
   }
 };
 
-
 navigator.mediaDevices.getAllSources = async () => {
   try {
     const sources = await globalThis.getAllAvailableSources();
     return sources;
   } catch (error) {
-    throw error; 
+    throw error;
   }
 };
+
