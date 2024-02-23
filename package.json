@@ -9,8 +9,8 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder build --win portable",
-    "build:mac": "electron-builder -m",
+    "build:win": "electron-builder --ia32 --x64 -w portable",
+    "build:mac": "electron-builder build --mac",
     "build:linux": "electron-builder -l",
     "build:all": "electron-builder -wml",
     "build": "electron-builder"

@@ -29,7 +29,8 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
       contextIsolation: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      webSecurity: false
     },
     icon: iconPath
   });
@@ -61,3 +62,4 @@ ipcMain.handle('get-available-sources', async () => {
   const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
   return sources;
 });
+app.commandLine.appendSwitch('enable-features', 'WebSpeechAPI');
