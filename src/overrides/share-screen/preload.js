@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld("getDisplayMedia", async (sourceId) => {
 });
 
 contextBridge.exposeInMainWorld("getAllAvailableSources", async () => {
+  console.log("getAllAvailableSources");
   const sources = await ipcRenderer.invoke("get-available-sources");
   console.log({sources});
   return sources;

@@ -73,9 +73,12 @@ app.on("activate", () => {
   if (mainWindow === null) createWindow();
 });
 ipcMain.handle("get-available-sources", async () => {
+  const permissionStatus = systemPreferences.getMediaAccessStatus("screen");
+  if (permissionStatus !== "granted") {
+    shell.openExternal("x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture");
+  }
   const sources = await desktopCapturer.getSources({
     types: ["window", "screen"],
-    fetchWindowIcons: true,
     thumbnailSize: {
       width: 1280,
       height: 720,
@@ -84,16 +87,6 @@ ipcMain.handle("get-available-sources", async () => {
   sources.forEach((source) => {
     source.thumbnail = source.thumbnail.toDataURL();
   });
-  const permissionStatus = systemPreferences.getMediaAccessStatus("screen");
-  if (permissionStatus !== "granted") {
-    // Open Screen privacy settings in System Preferences
-    shell.openExternal(
-      "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
-    );
-    // throw new Error("screen capture, access denied");
-    console.log("Permission status ", permissionStatus);
-  }
-
   return sources;
 });
 app.commandLine.appendSwitch("enable-features", "WebSpeechAPI");
