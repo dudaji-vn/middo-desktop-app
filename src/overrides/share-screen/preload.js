@@ -7,10 +7,6 @@ contextBridge.exposeInMainWorld("getDisplayMedia", async (sourceId) => {
 
 contextBridge.exposeInMainWorld("getAllAvailableSources", async () => {
   const sources = await ipcRenderer.invoke("get-available-sources");
-  const result = [];
-  sources.forEach((source) => {
-    const thumbnail = source.thumbnail.toDataURL();
-    result.push({ ...source, thumbnail });
-  });
-  return result;
+  console.log({sources});
+  return sources;
 });

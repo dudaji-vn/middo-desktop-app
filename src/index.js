@@ -1,5 +1,13 @@
-
-const { app, BrowserWindow, globalShortcut, ipcMain, desktopCapturer } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  desktopCapturer,
+  nativeImage,
+  systemPreferences,
+  shell,
+} = require("electron");
 const path = require("path");
 require("dotenv").config();
 
@@ -8,9 +16,13 @@ const isDev = process.env.NODE_ENV === "development";
 let mainWindow;
 
 let iconPath;
-switch(process.platform) {
+switch (process.platform) {
   case "darwin":
     iconPath = path.join(__dirname, "assets", "icon.icns");
+    const image = nativeImage.createFromPath(
+      app.getAppPath() + "/src/assets/icon.icns"
+    );
+    app.dock.setIcon(image);
     break;
   case "win32":
   case "win64":
@@ -30,17 +42,19 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: true,
       enableRemoteModule: true,
-      webSecurity: false
+      webSecurity: false,
     },
-    icon: iconPath
+    icon: iconPath,
   });
   mainWindow.loadURL(APP_URL);
 
   // Hide menu bar
   mainWindow.setMenu(null);
 
-  if(isDev) mainWindow.webContents.toggleDevTools();
-  globalShortcut.register("Control+I", () => mainWindow.webContents.toggleDevTools());
+  mainWindow.webContents.toggleDevTools();
+  globalShortcut.register("Control+I", () =>
+    mainWindow.webContents.toggleDevTools()
+  );
   globalShortcut.register("Control+R", () => mainWindow.reload());
 
   mainWindow.on("closed", () => {
@@ -56,10 +70,30 @@ app.on("window-all-closed", () => {
 });
 
 app.on("activate", () => {
-  if (mainWindow === null)  createWindow();
+  if (mainWindow === null) createWindow();
 });
-ipcMain.handle('get-available-sources', async () => {
-  const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
+ipcMain.handle("get-available-sources", async () => {
+  const sources = await desktopCapturer.getSources({
+    types: ["window", "screen"],
+    fetchWindowIcons: true,
+    thumbnailSize: {
+      width: 1280,
+      height: 720,
+    },
+  });
+  sources.forEach((source) => {
+    source.thumbnail = source.thumbnail.toDataURL();
+  });
+  const permissionStatus = systemPreferences.getMediaAccessStatus("screen");
+  if (permissionStatus !== "granted") {
+    // Open Screen privacy settings in System Preferences
+    shell.openExternal(
+      "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
+    );
+    // throw new Error("screen capture, access denied");
+    console.log("Permission status ", permissionStatus);
+  }
+
   return sources;
 });
-app.commandLine.appendSwitch('enable-features', 'WebSpeechAPI');
+app.commandLine.appendSwitch("enable-features", "WebSpeechAPI");
