@@ -1,4 +1,4 @@
-const { contextBridge, desktopCapturer, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("getDisplayMedia", async (sourceId) => {
   const sources = await ipcRenderer.invoke("get-available-sources");
   const selectedSource = sources.find((source) => source.id === sourceId);
@@ -6,8 +6,6 @@ contextBridge.exposeInMainWorld("getDisplayMedia", async (sourceId) => {
 });
 
 contextBridge.exposeInMainWorld("getAllAvailableSources", async () => {
-  console.log("getAllAvailableSources");
   const sources = await ipcRenderer.invoke("get-available-sources");
-  console.log({sources});
   return sources;
 });
