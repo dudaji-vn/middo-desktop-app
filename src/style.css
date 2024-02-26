@@ -1,0 +1,3 @@
+.h-main-container-height {
+    height: calc(100dvh - 52px)
+}
