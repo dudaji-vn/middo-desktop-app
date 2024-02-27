@@ -73,9 +73,11 @@ app.on("activate", () => {
   if (mainWindow === null) createWindow();
 });
 ipcMain.handle("get-available-sources", async () => {
-  const permissionStatus = systemPreferences.getMediaAccessStatus("screen");
-  if (permissionStatus !== "granted") {
-    shell.openExternal("x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture");
+  if(systemPreferences.getMediaAccessStatus) {
+    const permissionStatus = systemPreferences.getMediaAccessStatus("screen");
+    if (permissionStatus !== "granted") {
+      shell.openExternal("x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture");
+    }
   }
   const sources = await desktopCapturer.getSources({
     types: ["window", "screen"],
