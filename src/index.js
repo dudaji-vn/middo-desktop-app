@@ -11,8 +11,7 @@ const {
 const path = require("path");
 require("dotenv").config();
 
-const APP_URL = process.env.APP_URL || "http://localhost:3000";
-const isDev = process.env.NODE_ENV === "development";
+const APP_URL = process.env.APP_URL || "https://test.middo.app";
 let mainWindow;
 
 let iconPath;
@@ -33,6 +32,7 @@ switch (process.platform) {
 }
 
 function createWindow() {
+  console.log('Icon path:', iconPath);
   mainWindow = new BrowserWindow({
     sandbox: false,
     width: 1200,
@@ -51,7 +51,7 @@ function createWindow() {
   // Hide menu bar
   mainWindow.setMenu(null);
 
-  mainWindow.webContents.toggleDevTools();
+  // mainWindow.webContents.toggleDevTools();
   globalShortcut.register("Control+I", () =>
     mainWindow.webContents.toggleDevTools()
   );
